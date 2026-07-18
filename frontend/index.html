@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>INTER-VU</title>
+    <meta name="description" content="AI-powered mock interview experience with camera-based posture monitoring" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          <path d="M8 10h.01"></path>
+          <path d="M12 10h.01"></path>
+          <path d="M16 10h.01"></path>
+        </svg>
+        <span>INTER-VU</span>
+      </div>
+      <nav class="nav-links">
+        <a href="#interview">Live Interview</a>
+        <a href="#features">Features</a>
+        <a href="#about">About</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-text">
+          <span class="pill">Real-Time AI Mock Interview</span>
+          <h1>Use your camera to practice interview posture, eye contact, and hand gestures.</h1>
+          <p>
+            This experience opens your webcam, monitors your position, and asks AI-style interview questions in real time so you can rehearse like a real candidate. Please allow camera access when the browser asks.
+          </p>
+          <div class="hero-actions">
+    <button id="startInterviewBtn" class="btn btn-primary">
+        Start Camera & Interview
+    </button>
+
+    <button id="testCameraBtn" class="btn btn-secondary">
+        Test Camera
+    </button>
+
+    <a class="btn btn-secondary" href="#features">
+        Learn More
+    </a>
+</div>
+
+<div class="resume-upload">
+    <h3>Upload Your Resume</h3>
+
+    <input
+        type="file"
+        id="resumeFile"
+        accept=".pdf,.doc,.docx">
+
+    <button
+        id="uploadResumeBtn"
+        class="btn btn-primary">
+        Upload Resume
+    </button>
+
+    <p id="resumeStatus"></p>
+</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="interview-shell" id="interview">
+        <div class="camera-row">
+          <div class="video-panel">
+            <div class="panel-header">
+              <h2>Interview Camera</h2>
+              <span id="cameraStatus" class="status-pill">Camera is off</span>
+            </div>
+            <div class="video-wrapper">
+              <video id="video" autoplay playsinline muted></video>
+              <div id="cameraHint" class="camera-hint">Allow camera access to begin your mock interview.</div>
+            </div>
+            <div class="control-row">
+              <button id="nextQuestionBtn" class="btn btn-secondary">Next Question</button>
+              <button id="endInterviewBtn" class="btn btn-secondary">End Interview</button>
+            </div>
+          </div>
+
+          <div class="score-card vertical-score">
+            <div class="score-card-header">
+              <p class="card-label">Position Score</p>
+              <p class="card-copy">The system evaluates eye contact, posture, and hand visibility during the interview.</p>
+            </div>
+            
+            <div class="score-radial-container">
+              <svg class="progress-ring" width="160" height="160">
+                <circle class="progress-ring__bg" stroke="rgba(255, 255, 255, 0.05)" stroke-width="10" fill="transparent" r="70" cx="80" cy="80"/>
+                <circle class="progress-ring__bar" stroke="var(--neon-cyan)" stroke-width="10" fill="transparent" r="70" cx="80" cy="80"/>
+              </svg>
+              <div class="score-radial-text">
+                <span id="positionScore">0%</span>
+                <span class="score-radial-label">Overall</span>
+              </div>
+            </div>
+
+            <div class="score-metrics">
+              <div>
+                <span>Eye Contact</span>
+                <strong id="eyeMetric">Waiting</strong>
+              </div>
+              <div>
+                <span>Hands</span>
+                <strong id="handMetric">Waiting</strong>
+              </div>
+              <div>
+                <span>Posture</span>
+                <strong id="postureMetric">Waiting</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="insights-panel">
+          <div class="question-card">
+            <p class="card-label">AI Interviewer</p>
+            <h3 id="questionTitle">Question will appear here</h3>
+            <p id="questionText">Tap start to begin your interview practice session.</p>
+            <div class="question-meta">
+              <span id="questionCounter">Question 0 / 0</span>
+              <span id="timer">00:00</span>
+            </div>
+          </div>
+
+          <div class="question-card feedback-card">
+            <p class="card-label">Live Feedback</p>
+            <h3 id="feedbackTitle">Speaking Review</h3>
+            <p id="feedbackText">Your voice clarity, pacing, and confidence will be summarized here after the session.</p>
+            <div class="question-meta">
+              <span id="confidenceLabel">Confidence: Medium</span>
+              <span id="clarityLabel">Clarity: Good</span>
+            </div>
+          </div>
+
+          <div class="stats-card">
+            <h3>Live Monitoring</h3>
+            <div class="metric-row">
+              <span>Eye Contact</span>
+              <strong id="eyeValue">Ready</strong>
+            </div>
+            <div class="metric-row">
+              <span>Hand Gesture</span>
+              <strong id="gestureValue">Ready</strong>
+            </div>
+            <div class="metric-row">
+              <span>Position</span>
+              <strong id="positionValue">Ready</strong>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <p class="card-label">Voice Assistant</p>
+            <div class="voice-controls">
+              <label for="genderSelect">Voice Type</label>
+              <select id="genderSelect">
+                <option value="female">Female Voice</option>
+                <option value="male">Male Voice</option>
+              </select>
+            </div>
+            <p class="voice-hint">Choose the voice style you want the interviewer to use.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="review-panel" id="reviewPanel" style="display: none;">
+        <div class="review-header">
+          <h2>Interview Review & Analysis</h2>
+          <div class="overall-score-container">
+            <div class="overall-score">
+              <span class="score-label">Overall Score</span>
+              <span class="score-value" id="overallPercentage">0%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="review-grid">
+          <div class="review-item">
+            <div class="review-criterion">1. Technical Knowledge</div>
+            <div class="review-score" id="techKnowledgeScore">0/10</div>
+            <div class="review-bar">
+              <div class="review-fill" id="techKnowledgeFill" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <div class="review-item">
+            <div class="review-criterion">2. Communication Skills</div>
+            <div class="review-score" id="communicationScore">0/10</div>
+            <div class="review-bar">
+              <div class="review-fill" id="communicationFill" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <div class="review-item">
+            <div class="review-criterion">3. Confidence Level</div>
+            <div class="review-score" id="confidenceScore">0/10</div>
+            <div class="review-bar">
+              <div class="review-fill" id="confidenceFill" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <div class="review-item">
+            <div class="review-criterion">4. Problem-Solving Ability</div>
+            <div class="review-score" id="problemSolvingScore">0/10</div>
+            <div class="review-bar">
+              <div class="review-fill" id="problemSolvingFill" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <div class="review-item">
+            <div class="review-criterion">5. Eye Contact</div>
+            <div class="review-score" id="eyeContactScore">0/10</div>
+            <div class="review-bar">
+              <div class="review-fill" id="eyeContactFill" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <div class="review-item">
+            <div class="review-criterion">6. Body Language & Posture</div>
+            <div class="review-score" id="bodyLanguageScore">0/10</div>
+            <div class="review-bar">
+              <div class="review-fill" id="bodyLanguageFill" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <div class="review-item">
+            <div class="review-criterion">7. Speaking Pace</div>
+            <div class="review-score" id="speakingPaceScore">0/10</div>
+            <div class="review-bar">
+              <div class="review-fill" id="speakingPaceFill" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <div class="review-item">
+            <div class="review-criterion">8. Grammar & Vocabulary</div>
+            <div class="review-score" id="grammarScore">0/10</div>
+            <div class="review-bar">
+              <div class="review-fill" id="grammarFill" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <div class="review-item">
+            <div class="review-criterion">9. Professionalism</div>
+            <div class="review-score" id="professionalismScore">0/10</div>
+            <div class="review-bar">
+              <div class="review-fill" id="professionalismFill" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <div class="review-item">
+            <div class="review-criterion">10. Overall Impression</div>
+            <div class="review-score" id="impressionScore">0/10</div>
+            <div class="review-bar">
+              <div class="review-fill" id="impressionFill" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="review-analysis">
+          <h3>Performance Analysis</h3>
+          <p id="analysisText">Your analysis will appear here after the interview ends.</p>
+        </div>
+
+        <div class="review-actions">
+          <button id="restartBtn" class="btn btn-primary">Start New Interview</button>
+        </div>
+      </section>
+
+      <section class="features" id="features">
+        <div class="section-title">
+          <h2>Why this experience works</h2>
+          <p>It combines camera access, posture monitoring, and AI-style questioning into one simple interview rehearsal tool.</p>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature-card">
+            <h3>Camera Position Check</h3>
+            <p>Detects whether your face stays centered and your gestures remain visible for a professional interview setup.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Eye & Hand Awareness</h3>
+            <p>Encourages steady eye contact and clear open gestures instead of distracting movement.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Real-Time Questions</h3>
+            <p>The AI interviewer presents questions one by one and keeps the session moving like a live interview.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="about" id="about">
+        <h2>Built for practice and confidence</h2>
+        <p>
+          This mock interview setup is designed for students, job seekers, and final-year project demos who want to rehearse in a more realistic way.
+        </p>
+      </section>
+    </main>
+
+    <footer id="contact">
+      <p>Made for real-time interview practice with camera monitoring and AI-driven questioning.</p>
+      <p>&copy; <span id="year"></span> INTER-VU</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
